@@ -90,7 +90,7 @@ void autonomous() {
 	enableBase(true, true);
 	baseTurn(calcBaseTurn(2, 58, false));
 	waitTurn(2000);
-	setIntake(100);
+	setIntake(95);
 
 	setArmClampState(false);
 	baseMove(75);
