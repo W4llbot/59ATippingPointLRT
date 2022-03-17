@@ -73,61 +73,115 @@ void competition_initialize() {}
  */
 void autonomous() {
 	// drive(50, 50);
-  double start = millis();
-	setArmPos(2);
-	setOffset(-76);
-	baseTurn(-76);
+	double start = millis();
+	// setArmPos(2);
+	setOffset(-133.5);
+	baseTurn(-133.5);
 	delay(100);
 	Task odometryTask(Odometry, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Odom Task");
 	Task controlTask(PPControl, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "PP Task");
 
 	setMaxRPMV(530);
-	baseMove(-5);
-	waitPP(700);
-
-	delay(500);
-	setIntake(95);
-
-  setArmClampState(false);
-	baseMove(5);
-	waitPP(700);
-	setArmPos(0);
+	baseMove(-26);
+	waitPP(2000);
 
 	delay(300);
-	// setIntake(0);
 
-	enableBase(true, false);
-	baseTurn(82);
-	delay(500);
-	setIntake(0);
-	waitTurn(1000);
-	setTiltState(false);
 	enableBase(true, true);
-
-	// 90,19
-	std::vector<Node> moveTowardsGoal = {position, Node(80, 19)};
-	double smooth = 0.75;
-	basePP(moveTowardsGoal, 1-smooth, smooth, 16);
-	waitPP(2000);
-
-	baseTurn(calcBaseTurn(97, 18, true), 0.105);
-  waitTurn(1000);
-
-	setArmPos(1);
-	basePP({position, Node(97, 19)}, 1-smooth, smooth, 14, true);
-	waitPP(2000);
-
-	baseTurn(calcBaseTurn(85, 56, false), 0.14);
-	waitTurn(1000);
+	baseTurn(calcBaseTurn(2, 58, false));
+	waitTurn(2000);
 	setIntake(100);
+
 	setArmClampState(false);
-	setArmPos(0);
+	baseMove(75);
+	waitPP(300);
 
-	basePP({position, Node(80, 55.5)}, 1-smooth, smooth, 14);
+	setArmClampState(false);
+	delay(100);
+	baseTurn(calcBaseTurn(-37, 60, false));
+	waitTurn(2000);
+
+	setTiltState(false);
+	delay(500);
+	setArmClampState(false);
+	baseMove(70);
+	waitPP(3000);
+
+	setArmClampState(false);
+	delay(100);
+	baseTurn(calcBaseTurn(-72, 60, false));
+	waitTurn(2000);
+
+	double smooth = 0.75;
+	setArmClampState(false);
+	basePP({position, Node(-72, 60)}, 1-smooth, smooth, 14);
+	waitPP(3000);
+	setArmClampState(true);
+
+	basePP({position, Node(-72, 110)}, 1-smooth, smooth, 14);
 	waitPP(2000);
 
-	basePP({position, Node(90, 5)}, 1-smooth, smooth, 14, true);
-	waitPP(2000);
+
+	//-33 60
+	//dis 90
+	// -70 60
+
+
+  // double start = millis();
+	// setArmPos(2);
+	// setOffset(-76);
+	// baseTurn(-76);
+	// delay(100);
+	// Task odometryTask(Odometry, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Odom Task");
+	// Task controlTask(PPControl, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "PP Task");
+	//
+	// setMaxRPMV(530);
+	// baseMove(-5);
+	// waitPP(700);
+	//
+	// delay(500);
+	// setIntake(95);
+	//
+  // setArmClampState(false);
+	// baseMove(5);
+	// waitPP(700);
+	// setArmPos(0);
+	//
+	// delay(300);
+	// // setIntake(0);
+	//
+	// enableBase(true, false);
+	// baseTurn(82);
+	// delay(500);
+	// setIntake(0);
+	// waitTurn(1000);
+	// setTiltState(false);
+	// enableBase(true, true);
+	//
+	// // 90,19
+	// std::vector<Node> moveTowardsGoal = {position, Node(80, 19)};
+	// double smooth = 0.75;
+	// basePP(moveTowardsGoal, 1-smooth, smooth, 16);
+	// waitPP(2000);
+	//
+	// baseTurn(calcBaseTurn(97, 18, true), 0.105);
+  // waitTurn(1000);
+	//
+	// setArmPos(1);
+	// basePP({position, Node(97, 19)}, 1-smooth, smooth, 14, true);
+	// waitPP(2000);
+	//
+	// baseTurn(calcBaseTurn(85, 56, false), 0.14);
+	// waitTurn(1000);
+	// setIntake(100);
+	// setArmClampState(false);
+	// setArmPos(0);
+	//
+	// basePP({position, Node(80, 55.5)}, 1-smooth, smooth, 14);
+	// waitPP(2000);
+	//
+	// basePP({position, Node(90, 5)}, 1-smooth, smooth, 14, true);
+	// waitPP(2000);
 
 
 	// enableBase(true, false);
@@ -193,7 +247,7 @@ void opcontrol() {
 
 	int armPos = 0;
 	bool tankDrive = true;
-	double intakeSpeed = 100;
+	double intakeSpeed = 110;
 	while(true) {
 		double left, right;
 		if(master.get_digital_new_press(DIGITAL_Y)) tankDrive = !tankDrive;
