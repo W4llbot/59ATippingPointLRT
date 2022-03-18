@@ -90,11 +90,11 @@ void autonomous() {
 	enableBase(true, true);
 	baseTurn(calcBaseTurn(2, 58, false));
 	waitTurn(2000);
-	setIntake(95);
+	setIntake(105);
 
 	setArmClampState(false);
 	baseMove(75);
-	waitPP(300);
+	waitPP(3000);
 
 	setArmClampState(false);
 	delay(100);
@@ -247,7 +247,7 @@ void opcontrol() {
 
 	int armPos = 0;
 	bool tankDrive = true;
-	double intakeSpeed = 110;
+	double intakeSpeed = 95;
 	while(true) {
 		double left, right;
 		if(master.get_digital_new_press(DIGITAL_Y)) tankDrive = !tankDrive;

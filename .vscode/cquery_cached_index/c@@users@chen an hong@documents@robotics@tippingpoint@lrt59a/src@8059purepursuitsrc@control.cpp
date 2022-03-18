@@ -2,7 +2,7 @@
 #define kV 1375
 #define kA 140500
 #define kP 1000
-#define DEFAULT_TURN_KP 0.12
+#define DEFAULT_TURN_KP 0.121
 // #define kA 50000
 // #define kP 1000
 
@@ -136,7 +136,8 @@ double calcBaseTurn(double x, double y, bool rev) {
 // }
 
 void waitTurn(double cutoff) {
-  while(fabs(targBearing - bearing)*toDeg > TURN_LEEWAY || fabs(measuredVL*inPerMsToRPM) > 5 || fabs(measuredVR*inPerMsToRPM) > 5) delay(5);
+  double start = millis();
+  while((fabs(targBearing - bearing)*toDeg > TURN_LEEWAY || fabs(measuredVL*inPerMsToRPM) > 5 || fabs(measuredVR*inPerMsToRPM) > 5) && millis() - start < cutoff) delay(5);
   printf("I stopped :)\n\n");
 }
 
@@ -162,8 +163,9 @@ void baseMove(double x, double y) {
 
 void waitPP(double cutoff){
   // int stopTime;
+  double start = millis();
   Node target = path.getSmoWp(path.getN()-1);
-  while((distance(position, target) >= LEEWAY || fabs(measuredV*inPerMsToRPM) > 2)) delay(5);
+  while((distance(position, target) >= LEEWAY || fabs(measuredV*inPerMsToRPM) > 2) && millis() - start < cutoff) delay(5);
 
   resetPP();
   enablePP = false;
