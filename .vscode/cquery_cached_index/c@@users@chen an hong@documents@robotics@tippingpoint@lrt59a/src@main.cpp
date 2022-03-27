@@ -72,7 +72,6 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	// drive(50, 50);
 	double start = millis();
 	// setArmPos(2);
 	setOffset(-133.5);
@@ -82,24 +81,45 @@ void autonomous() {
 	Task controlTask(PPControl, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "PP Task");
 
 	setMaxRPMV(530);
-	baseMove(-26);
+	setArmHeight(1400);
+	baseMove(-25);
 	waitPP(2000);
+	setTiltState(true);
 
 	delay(300);
 
 	enableBase(true, true);
 	baseTurn(calcBaseTurn(2, 58, false));
-	waitTurn(2000);
+	waitTurn(1500);
 	setIntake(105);
 
+	double smooth = 0.75;
 	setArmClampState(false);
-	baseMove(75);
+	setArmPos(0);
+	// baseMove(2, 58);
+	basePP({position, Node(2, 58)}, 1-smooth, smooth, 14);
 	waitPP(3000);
+
+	setArmClampState(true);
+	delay(100);
+	setArmPos(2);
+
+	basePP({position, Node(-30, 102)}, 1-smooth, smooth, 14);
+	waitPP(3000);
+
+	setArmPos(1);
+	// delay(300);
+	setArmClampState(false);
+	delay(500);
+
+	baseMove(-20);
+	waitPP(1000);
 
 	setArmClampState(false);
 	delay(100);
 	baseTurn(calcBaseTurn(-37, 60, false));
-	waitTurn(2000);
+	setArmPos(0);
+	waitTurn(1500);
 
 	setTiltState(false);
 	delay(500);
@@ -110,17 +130,69 @@ void autonomous() {
 	setArmClampState(false);
 	delay(100);
 	baseTurn(calcBaseTurn(-72, 60, false));
-	waitTurn(2000);
+	waitTurn(1000);
 
-	double smooth = 0.75;
 	setArmClampState(false);
-	basePP({position, Node(-72, 60)}, 1-smooth, smooth, 14);
-	waitPP(3000);
+	basePP({position, Node(-73, 60), Node(-72, 110)}, 1-smooth, smooth, 14);
+	waitPP(2000);
 	setArmClampState(true);
 
-	basePP({position, Node(-72, 110)}, 1-smooth, smooth, 14);
-	waitPP(2000);
+	// basePP({position, Node(-72, 110)}, 1-smooth, smooth, 14);
+	// waitPP(2000);
 
+	//--------------------------------------------------------
+	// old auton
+	// drive(50, 50);
+	// double start = millis();
+	// // setArmPos(2);
+	// setOffset(-133.5);
+	// baseTurn(-133.5);
+	// delay(100);
+	// Task odometryTask(Odometry, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Odom Task");
+	// Task controlTask(PPControl, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "PP Task");
+	//
+	// setMaxRPMV(530);
+	// baseMove(-25);
+	// waitPP(2000);
+	// setTiltState(true);
+	//
+	// delay(300);
+	//
+	// enableBase(true, true);
+	// baseTurn(calcBaseTurn(2, 58, false));
+	// waitTurn(1500);
+	// setIntake(105);
+	//
+	// setArmClampState(false);
+	// baseMove(75);
+	// waitPP(3000);
+	//
+	// setArmClampState(false);
+	// delay(100);
+	// baseTurn(calcBaseTurn(-37, 60, false));
+	// waitTurn(1500);
+	//
+	// setTiltState(false);
+	// delay(500);
+	// setArmClampState(false);
+	// baseMove(70);
+	// waitPP(3000);
+	//
+	// setArmClampState(false);
+	// delay(100);
+	// baseTurn(calcBaseTurn(-72, 60, false));
+	// waitTurn(1500);
+	//
+	// double smooth = 0.75;
+	// setArmClampState(false);
+	// basePP({position, Node(-72, 60)}, 1-smooth, smooth, 14);
+	// waitPP(2000);
+	// setArmClampState(true);
+	//
+	// basePP({position, Node(-72, 110)}, 1-smooth, smooth, 14);
+	// waitPP(2000);
+
+	//--------------------------------------------------------
 
 	//-33 60
 	//dis 90
@@ -276,7 +348,7 @@ void opcontrol() {
 
 		if(master.get_digital_new_press(DIGITAL_X)) toggleTiltState();
 
-		setIntake(master.get_digital(DIGITAL_R1)*intakeSpeed);
+		setIntake((master.get_digital(DIGITAL_R1)-master.get_digital(DIGITAL_UP))*intakeSpeed);
 
 		posPrintMaster();
 

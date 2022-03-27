@@ -2,7 +2,7 @@
 #define kV 1375
 #define kA 140500
 #define kP 1000
-#define DEFAULT_TURN_KP 0.121
+#define DEFAULT_TURN_KP 0.122
 // #define kA 50000
 // #define kP 1000
 
